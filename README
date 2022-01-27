@@ -1,0 +1,36 @@
+watch
+=====
+
+Recursively poll a directory for file changes.
+
+Usage - CLI
+-----------
+
+	$ watch      # poll the current directory
+	$ watch src/ # poll the "src/" directory
+
+Usage - Go
+-----------
+
+	package main
+
+	import (
+		"fmt"
+		"os"
+
+		"github.com/itsliamegan/watch"
+	)
+
+	func main() {
+		changes, errs := watch.Start("src/")
+
+		for {
+			select {
+			case change := <-changes:
+				fmt.Println(change)
+			case err := <-errs:
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		}
+	}
